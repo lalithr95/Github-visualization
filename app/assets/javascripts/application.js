@@ -18,7 +18,32 @@
 $(document).ready(function(){
 	$("#search").click(function() {
 		var searchterm = $("#term").val() ? $("#term").val() : "Lalithr95";
+		clear();
+		drawDefaultGraph();
+		var repos = [];
+		var langs = new Object();
 
+		function drawDefaultGraph() {
+			$.get("https://api.github.com/users/"+ searchterm + "/repos", function(data){
+				for(var key in data) {
+					repos.push(data[key]['name']);
+					for(var row in repos) {
+						$.get("https://api.github.com/repos/" + searchterm + "/" + repos[row] + "/languages", function(data) {
+							for(var lang in data) {
+								if (langs[lang]) {
+									langs[lang] += data[lang];
+								}
+								else {
+									langs[lang] = data[lang];
+								}
+							};
+							console.log(langs);
+						});
+					};
+				};
+			});
+		};
+		console.log(langs);
 		// for clear
 		$('#clear').click(function(e) {
 			e.preventDefault();
@@ -27,6 +52,14 @@ $(document).ready(function(){
 			$("#repoDetails").html("");
 			$("#chart").html("");
 		});
+
+		function clear() {
+			$("#term").text("");
+			$("#username").html("");
+			$("#repoDetails").html("");
+			$("#chart").html("");
+		}
+
 
 		function charInitialize(dataset) {
 			$('#chart').highcharts({
@@ -109,27 +142,5 @@ $(document).ready(function(){
 
 		getUserData(showUser);
 		getUserRepos(showRepos);
-
-
-		// char starts here
-		var dataset = [];
-		var margin = {
-			top: 70,
-			left: 100,
-			right: 20,
-			botton: 60
-		};
-		var w = 600 - margin.left - margin.right;
-		var h = 500 - margin.top - margin.bottom;
-
-		// SVG
-		var svg = d3.select("div#chart").append("svg").attr("width", w + margin.left + margin.right).attr("height", h + margin.top + margin.bottom);
-
-		var xScale = d3.scale.ordinal().domain(dataset.map(function(d) { return d.key })).rangeRoundBands([margin.left + w], 0.05);
-		var yScale = d3.scale.linear().domain([0, d3.max(dataset, function(d) { return d.value; })]).range([h, margin.top]);
-
-		//define x y axis
-		var xAxis = d3.svg.axis().scale(xScale).orient("bottom");
-		var yAxis = d3.svg.axis().scale(yScale).orient("left");
 	});
 });
