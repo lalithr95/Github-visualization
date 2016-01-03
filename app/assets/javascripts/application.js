@@ -33,6 +33,9 @@ $(document).ready(function(){
 				chart: {
 					type: 'column'
 				},
+				credits: {
+					enabled: false
+				},
 				title: {
 					text: "Github Visualization"
 				},
