@@ -19,30 +19,47 @@ $(document).ready(function(){
 	$("#search").click(function() {
 		var searchterm = $("#term").val() ? $("#term").val() : "Lalithr95";
 		clear();
-		drawDefaultGraph();
+		getDefaultLanguages(drawDefaultGraph);
 		var repos = [];
 		var langs = new Object();
 
-		function drawDefaultGraph() {
-			$.get("https://api.github.com/users/"+ searchterm + "/repos", function(data){
-				for(var key in data) {
-					repos.push(data[key]['name']);
-					for(var row in repos) {
-						$.get("https://api.github.com/repos/" + searchterm + "/" + repos[row] + "/languages", function(data) {
-							for(var lang in data) {
-								if (langs[lang]) {
-									langs[lang] += data[lang];
-								}
-								else {
-									langs[lang] = data[lang];
-								}
-							};
-							console.log(langs);
-						});
-					};
-				};
+		function getDefaultLanguages(callback) {
+			$.get("/visualize/" + searchterm, function(data) {
+				success: callback(data.model);
 			});
 		};
+
+		function drawDefaultGraph(data) {
+			$("#chart").html("");
+			$("#chart").highcharts({
+				chart: {
+					type: 'column'
+				},
+				credits: {
+					enabled: false
+				},
+				title: {
+					text: "Github Visualization"
+				},
+				xAxis: {
+					title: {
+						text: 'Languages'
+					},
+					categories: Object.keys(data)
+				},
+				yAxis: {
+					title: {
+						text: 'Insertions'
+					}
+				},
+				series: [{
+					data: Object.keys(data).map(function(key) {
+						return data[key];
+					})
+				}]
+			});
+		};
+
 		console.log(langs);
 		// for clear
 		$('#clear').click(function(e) {
