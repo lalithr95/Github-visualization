@@ -26,6 +26,6 @@ class HomeController < ApplicationController
 
 	private
 	def get_client
-		@client = Octokit::Client::new(access_token: '773ed516605152e57b81e891c77c74b3506c15c8')
+		@client = Octokit::Client::new(access_token: ENV['access_token'])
 	end
 end
