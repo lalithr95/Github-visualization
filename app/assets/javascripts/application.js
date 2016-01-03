@@ -118,7 +118,7 @@ $(document).ready(function(){
 		};
 
 		function getUserRepos(callback) {
-			$.get("https://api.github.com/users/"+ searchterm + "/repos", function(data, status){
+			$.get("https://api.github.com/users/"+ searchterm + "/repos?per_page=100", function(data, status){
 				console.log(data);
 				success: callback(data, status);
 			});
