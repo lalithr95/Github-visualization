@@ -8,12 +8,14 @@ class HomeController < ApplicationController
 		repos = Array.new
 		langs = Hash.new
 		@client.repositories(user = user).each do |repo|
-			repos << repo.name
-			@client.languages(user + '/' + repo.name).each do |lang, value|
-				if langs.keys.include? lang
-					langs[lang] += value
-				else
-					langs[lang] = value
+			if !repo.fork
+				repos << repo.name
+				@client.languages(user + '/' + repo.name).each do |lang, value|
+					if langs.keys.include? lang
+						langs[lang] += value
+					else
+						langs[lang] = value
+					end
 				end
 			end
 		end
