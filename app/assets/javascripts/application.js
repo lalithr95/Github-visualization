@@ -19,6 +19,14 @@ $(document).ready(function(){
 	$("#search").click(function() {
 		var searchterm = $("#term").val() ? $("#term").val() : "Lalithr95";
 
+		// for clear
+		$('#clear').click(function(e) {
+			e.preventDefault();
+			$("#term").text("");
+			$("#username").html("");
+			$("#repoDetails").html("");
+			$("#chart").html("");
+		});
 
 		function charInitialize(dataset) {
 			$('#chart').highcharts({
