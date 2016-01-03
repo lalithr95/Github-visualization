@@ -7,7 +7,7 @@ class HomeController < ApplicationController
 		user = params[:username] ? params[:username] : 'ramyabandaru'
 		repos = Array.new
 		langs = Hash.new
-		@client.repositories(user = user).each do |repo|
+		@client.repositories(user = user, per_page: 100).each do |repo|
 			if !repo.fork
 				repos << repo.name
 				@client.languages(user + '/' + repo.name).each do |lang, value|
