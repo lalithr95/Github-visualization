@@ -1,0 +1,3 @@
+deploy:
+  override:
+    - GIT_FLAGS='-f' push-to-heroku shipit-bot
